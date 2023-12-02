@@ -11,6 +11,8 @@ export class App extends Component {
     page: 1,
   }
 
+  
+
   onSubmitForm = (event) => {
      event.preventDefault();
      const searchData = event.target.elements[1].value;
@@ -29,7 +31,7 @@ export class App extends Component {
   render() {
     const {images} = this.state;
     return <div>
-      <SearchBar onSubmit={this.onSubmitForm}/>
+      <SearchBar onSubmit={this.onSubmitForm} />
       <ImageGallery>
          <ImageGalleryItem images={images}/>
       </ImageGallery>
