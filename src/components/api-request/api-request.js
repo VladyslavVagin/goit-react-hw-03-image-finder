@@ -8,7 +8,7 @@ async function getPicturesApi(searchData, page) {
       q: `${searchData}`,
       image_type: 'photo',
       orientation: 'horizontal',
-      page: page,
+      page,
       per_page: 12,
     },
   });
