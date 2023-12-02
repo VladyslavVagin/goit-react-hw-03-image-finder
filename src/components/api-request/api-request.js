@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function getPicturesApi(searchData) {
+async function getPicturesApi(searchData, page) {
   const response = await axios({
     url: 'https://pixabay.com/api/',
     params: {
@@ -8,7 +8,7 @@ async function getPicturesApi(searchData) {
       q: `${searchData}`,
       image_type: 'photo',
       orientation: 'horizontal',
-      page: 1,
+      page: page,
       per_page: 12,
     },
   });

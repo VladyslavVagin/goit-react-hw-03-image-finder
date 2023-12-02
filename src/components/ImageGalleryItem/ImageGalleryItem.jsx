@@ -6,7 +6,7 @@ const ImageGalleryItem = ({images}) => {
       {images.map((image) => {
         const {id, webformatURL} = image;
         return (  <li key={id}>
-          <img src={webformatURL} alt={id} />
+          <img src={webformatURL} alt={id} loading='lazy'/>
         </li>)
       })}
     </>

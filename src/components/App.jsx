@@ -8,13 +8,14 @@ export class App extends Component {
   state = {
     images: [],
     isLoading: false,
+    page: 1,
   }
 
   onSubmitForm = (event) => {
      event.preventDefault();
      const searchData = event.target.elements[1].value;
      if (searchData.trim() !== '') {
-      getPicturesApi(searchData).then(r => r.data).then(data => {
+      getPicturesApi(searchData, this.state.page).then(r => r.data).then(data => {
         if(data.total === 0) {
           Promise.reject(new Error('Images not founded, we so sorry'));
         }
