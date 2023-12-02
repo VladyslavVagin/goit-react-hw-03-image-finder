@@ -1,11 +1,16 @@
 import React from 'react';
 
-const ImageGalleryItem = (arrayImages) => {
+const ImageGalleryItem = ({images}) => {
   return (
-    <li class="gallery-item">
-      <img src="" alt="" />
-    </li>
-  );
-};
+    <>
+      {images.map((image) => {
+        const {id, webformatURL} = image;
+        return (  <li key={id}>
+          <img src={webformatURL} alt={id} />
+        </li>)
+      })}
+    </>
+  )
+}
 
 export default ImageGalleryItem;

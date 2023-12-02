@@ -12,9 +12,7 @@ async function getPicturesApi(searchData) {
       per_page: 12,
     },
   });
-  if (response.ok) {
-    return console.log(response);
-  }
+  return response;
 }
 
 export default getPicturesApi;
