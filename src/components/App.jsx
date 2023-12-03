@@ -24,7 +24,7 @@ export class App extends Component {
           if (data.total === 0) {
             Promise.reject(new Error('Images not founded, we so sorry'));
           }
-          this.setState({ images: data.hits });
+          this.setState({ images: [...data.hits] });
         })
         .catch(error => console.log(error.message))
         .finally(() => (event.target.elements[1].value = ''));
@@ -36,18 +36,22 @@ export class App extends Component {
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
 
   componentDidUpdate(_, prevState) {
-    if (prevState.page !== this.state.page) {
+    if(prevState.searchData !== this.state.searchData) {
+      this.setState({page: 1});
+    }
+
+    if (prevState.page !== this.state.page && prevState.searchData === this.state.searchData) {
       getPicturesApi(prevState.searchData, this.state.page)
         .then(response => response.data).then(data => {
           if (data.total === 0) {
             Promise.reject(new Error('Images not founded, we so sorry'));
+          } else if (this.state.page !== 1) {
+            this.setState((prevState) => ({images: [...prevState.images, ...data.hits]}));
+          } else {
+            this.setState({images: data.hits});
           }
-          this.setState((prevState) => ({images: [...prevState.images, ...data.hits]}));
         })
         .catch(error => console.log(error)).finally(console.log(this.state));
-    }
-    if(prevState.searchData !== this.state.searchData) {
-      this.setState({page: 1});
     }
   }
 
