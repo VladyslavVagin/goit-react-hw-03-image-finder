@@ -46,6 +46,9 @@ export class App extends Component {
         })
         .catch(error => console.log(error)).finally(console.log(this.state));
     }
+    if(prevState.searchData !== this.state.searchData) {
+      this.setState({page: 1});
+    }
   }
 
   render() {
