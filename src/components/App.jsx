@@ -27,13 +27,26 @@ export class App extends Component {
           this.setState({ images: data.hits });
         })
         .catch(error => console.log(error.message))
-        .finally(() => event.target.elements[1].value = '');
+        .finally(() => (event.target.elements[1].value = ''));
     } else {
       alert('Please write your request correctly!!!');
     }
   };
 
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.page !== this.state.page) {
+      getPicturesApi(prevState.searchData, this.state.page)
+        .then(response => response.data).then(data => {
+          if (data.total === 0) {
+            Promise.reject(new Error('Images not founded, we so sorry'));
+          }
+          this.setState((prevState) => ({images: [...prevState.images, ...data.hits]}));
+        })
+        .catch(error => console.log(error)).finally(console.log(this.state));
+    }
+  }
 
   render() {
     const { images } = this.state;
@@ -43,7 +56,7 @@ export class App extends Component {
         <ImageGallery>
           <ImageGalleryItem images={images} />
         </ImageGallery>
-       <Button onClick={this.onClick} />
+        <Button onClick={this.onClick} />
       </div>
     );
   }
