@@ -14,11 +14,12 @@ export class App extends Component {
   };
 
   onSubmitForm = event => {
+    this.setState({page: 1, images: []});
     event.preventDefault();
     const searchData = event.target.elements[1].value;
     this.setState({ searchData });
     if (searchData.trim() !== '') {
-      getPicturesApi(searchData, this.state.page)
+      getPicturesApi(searchData, 1)
         .then(r => r.data)
         .then(data => {
           if (data.total === 0) {
@@ -36,20 +37,10 @@ export class App extends Component {
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
 
   componentDidUpdate(_, prevState) {
-    if(prevState.searchData !== this.state.searchData) {
-      this.setState({page: 1});
-    }
-
-    if (prevState.page !== this.state.page && prevState.searchData === this.state.searchData) {
+    if (prevState.page !== this.state.page && prevState.searchData === this.state.searchData && this.state.page !== 1) {
       getPicturesApi(prevState.searchData, this.state.page)
-        .then(response => response.data).then(data => {
-          if (data.total === 0) {
-            Promise.reject(new Error('Images not founded, we so sorry'));
-          } else if (this.state.page !== 1) {
-            this.setState((prevState) => ({images: [...prevState.images, ...data.hits]}));
-          } else {
-            this.setState({images: data.hits});
-          }
+        .then(response => response.data).then(data => {return this.setState((prevState) => (
+              {images: [...prevState.images, ...data.hits]}));
         })
         .catch(error => console.log(error)).finally(console.log(this.state));
     }
