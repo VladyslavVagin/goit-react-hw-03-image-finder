@@ -63,7 +63,7 @@ export class App extends Component {
         <ImageGallery>
           <ImageGalleryItem images={images} />
         </ImageGallery>
-        <Button onClick={this.onClick} />
+        {images.length >= 12 && <Button onClick={this.onClick} />}
       </div>
     );
   }
