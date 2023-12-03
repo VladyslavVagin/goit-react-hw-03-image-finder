@@ -14,7 +14,7 @@ export class App extends Component {
   };
 
   onSubmitForm = event => {
-    this.setState({page: 1, images: []});
+    this.setState({ page: 1, images: [] });
     event.preventDefault();
     const searchData = event.target.elements[1].value;
     this.setState({ searchData });
@@ -37,24 +37,31 @@ export class App extends Component {
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
 
   componentDidUpdate(_, prevState) {
-    if (prevState.page !== this.state.page && prevState.searchData === this.state.searchData && this.state.page !== 1) {
+    if (
+      prevState.page !== this.state.page &&
+      prevState.searchData === this.state.searchData &&
+      this.state.page !== 1
+    ) {
       getPicturesApi(prevState.searchData, this.state.page)
-        .then(response => response.data).then(data => {return this.setState((prevState) => (
-              {images: [...prevState.images, ...data.hits]}));
-        })
-        .catch(error => console.log(error)).finally(console.log(this.state));
+        .then(response => response.data)
+        .then(data =>
+          this.setState(prevState => ({
+            images: [...prevState.images, ...data.hits],
+          }))
+        )
+        .catch(error => console.log(error));
     }
   }
 
   render() {
-    const { images } = this.state;
+    const { images, page } = this.state;
     return (
       <div>
         <SearchBar onSubmit={this.onSubmitForm} />
         <ImageGallery>
           <ImageGalleryItem images={images} />
         </ImageGallery>
-        {images.length >= 12 && <Button onClick={this.onClick} />}
+        {images.length / 12 >= page && <Button onClick={this.onClick} />}
       </div>
     );
   }
