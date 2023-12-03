@@ -4,6 +4,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import getPicturesApi from './api-request/api-request';
 import Button from './Button/Button';
+import Loader from './Loader/Loader';
 
 export class App extends Component {
   state = {
@@ -11,13 +12,13 @@ export class App extends Component {
     isLoading: false,
     page: 1,
     searchData: '',
+    status: 'idle',
   };
 
   onSubmitForm = event => {
-    this.setState({ page: 1, images: [] });
     event.preventDefault();
     const searchData = event.target.elements[1].value;
-    this.setState({ searchData });
+    this.setState({ searchData, page: 1, images: [], status: 'onLoad' });
     if (searchData.trim() !== '') {
       getPicturesApi(searchData, 1)
         .then(r => r.data)
@@ -28,7 +29,10 @@ export class App extends Component {
           this.setState({ images: [...data.hits] });
         })
         .catch(error => console.log(error.message))
-        .finally(() => (event.target.elements[1].value = ''));
+        .finally(() => {
+          (event.target.elements[1].value = '');
+          this.setState({status: 'idle'});
+        });
     } else {
       alert('Please write your request correctly!!!');
     }
@@ -42,6 +46,7 @@ export class App extends Component {
       prevState.searchData === this.state.searchData &&
       this.state.page !== 1
     ) {
+      this.setState({status: 'onLoad'})
       getPicturesApi(prevState.searchData, this.state.page)
         .then(response => response.data)
         .then(data =>
@@ -49,18 +54,19 @@ export class App extends Component {
             images: [...prevState.images, ...data.hits],
           }))
         )
-        .catch(error => console.log(error));
+        .catch(error => console.log(error)).finally(() => this.setState({status: 'idle'}));
     }
   }
 
   render() {
-    const { images, page } = this.state;
+    const { images, page, status } = this.state;
     return (
       <div>
         <SearchBar onSubmit={this.onSubmitForm} />
         <ImageGallery>
           <ImageGalleryItem images={images} />
         </ImageGallery>
+        {status === 'onLoad' &&  <Loader />}
         {images.length / 12 >= page && <Button onClick={this.onClick} />}
       </div>
     );
