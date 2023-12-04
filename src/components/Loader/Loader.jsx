@@ -12,7 +12,7 @@ const Loader = () => {
       wrapperStyle={{
         justifyContant: 'center',
         display: 'flex',
-        marginLeft: '44%',
+        marginLeft: '42%',
     }}
       visible={true}
     />

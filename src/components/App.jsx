@@ -12,13 +12,12 @@ export class App extends Component {
     isLoading: false,
     page: 1,
     searchData: '',
-    status: 'idle',
   };
 
   onSubmitForm = event => {
     event.preventDefault();
     const searchData = event.target.elements[1].value;
-    this.setState({ searchData, page: 1, images: [], status: 'onLoad' });
+    this.setState({ searchData, page: 1, images: [], isLoading: true });
     if (searchData.trim() !== '') {
       getPicturesApi(searchData, 1)
         .then(r => r.data)
@@ -26,12 +25,12 @@ export class App extends Component {
           if (data.total === 0) {
             Promise.reject(new Error('Images not founded, we so sorry'));
           }
-          this.setState({ images: [...data.hits] });
+          this.setState({ images: data.hits });
         })
         .catch(error => console.log(error.message))
         .finally(() => {
           (event.target.elements[1].value = '');
-          this.setState({status: 'idle'});
+          this.setState({isLoading: false});
         });
     } else {
       alert('Please write your request correctly!!!');
@@ -46,7 +45,7 @@ export class App extends Component {
       prevState.searchData === this.state.searchData &&
       this.state.page !== 1
     ) {
-      this.setState({status: 'onLoad'})
+      this.setState({isLoading: true})
       getPicturesApi(prevState.searchData, this.state.page)
         .then(response => response.data)
         .then(data =>
@@ -54,19 +53,19 @@ export class App extends Component {
             images: [...prevState.images, ...data.hits],
           }))
         )
-        .catch(error => console.log(error)).finally(() => this.setState({status: 'idle'}));
+        .catch(error => console.log(error)).finally(() => this.setState({isLoading: false}));
     }
   }
 
   render() {
-    const { images, page, status } = this.state;
+    const { images, page, isLoading } = this.state;
     return (
       <div>
         <SearchBar onSubmit={this.onSubmitForm} />
         <ImageGallery>
           <ImageGalleryItem images={images} />
         </ImageGallery>
-        {status === 'onLoad' &&  <Loader />}
+        {isLoading === true &&  <Loader />}
         {images.length / 12 >= page && <Button onClick={this.onClick} />}
       </div>
     );
