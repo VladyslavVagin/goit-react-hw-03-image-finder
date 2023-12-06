@@ -22,6 +22,7 @@ class Modal extends Component {
     }
   };
 
+
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
@@ -30,7 +31,7 @@ class Modal extends Component {
     return createPortal(
       <div className={css.overlay} onClick={this.handleBackdropClick}>
         <div className={css.modal}>
-          <img src={this.props.picture} alt={this.props.tags} />
+          <img src={this.props.picture} alt={this.props.tags}/>
         </div>
       </div>,
       modalRoot
