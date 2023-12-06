@@ -7,6 +7,7 @@ import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -14,35 +15,47 @@ export class App extends Component {
     isLoading: false,
     page: 1,
     searchData: '',
+    showModal: false,
   };
+
+  toggleModal = () => {
+    this.setState(({showModal}) => ({showModal: !showModal}))
+  }
 
   onSubmitForm = event => {
     event.preventDefault();
     const searchData = event.target.elements[1].value;
-    this.setState({ searchData, page: 1, images: [], isLoading: true });
-    this.addImagesToGallery(searchData, 1, []);
-    event.target.elements[1].value = '';
+    if(searchData.trim() !== '') {
+      this.setState({ searchData, page: 1, images: [], isLoading: true });
+      this.addImagesToGallery(searchData, 1, []);
+      event.target.elements[1].value = '';
+    } else {
+      toast.error('Incorrect INPUT ! Please, try again!', {
+        position: toast.POSITION.TOP_RIGHT
+      });
+    } 
   };
 
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
 
-  addImagesToGallery = async (searchData, page,  arrayInitial = []) => {
+  addImagesToGallery = async (searchData, page,  arrayInitial) => {
      try {
     const response =  await getPicturesApi(searchData, page);
-    if (response.data.total === 0) {
+    const data = response.data;
+    if (data.total === 0) {
       toast.error('Images not founded, we so sorry', {
         position: toast.POSITION.TOP_RIGHT
       });
-    } else if (response.data.total !== 0 && page === 1) {
-      toast.success(`We found ${response.data.totalHits} images`, {
+    } else if (data.total !== 0 && page === 1) {
+      toast.success(`We found ${data.totalHits} images`, {
         position: toast.POSITION.TOP_RIGHT
       });
-    } else if (Math.ceil(response.data.totalHits / 12) === page) {
+    } else if (Math.ceil(data.totalHits / 12) === page) {
       toast.info('You reached END of search result', {
         position: toast.POSITION.TOP_RIGHT
       });
     }
-      this.setState({ images: [...arrayInitial, ...response.data.hits] });
+      this.setState({ images: [...arrayInitial, ...data.hits] });
     } catch {
       toast.error('Server not answer, Sorry!', {
         position: toast.POSITION.TOP_RIGHT
@@ -55,20 +68,21 @@ export class App extends Component {
   componentDidUpdate(_, prevState) {
       const {searchData, page} = this.state;
     if (
-      prevState.page !== this.state.page &&
-      prevState.searchData === this.state.searchData ) {
+      prevState.page !== page &&
+      prevState.searchData === searchData ) {
       this.setState({isLoading: true})
       this.addImagesToGallery(searchData, page, prevState.images);
     }
   }
 
   render() {
-    const { images, page, isLoading } = this.state;
+    const { images, page, isLoading, showModal } = this.state;
     return (
       <div>
+        {showModal && <Modal onClose={this.toggleModal}/>}
         <SearchBar onSubmit={this.onSubmitForm} />
         <ImageGallery>
-          <ImageGalleryItem images={images} />
+          <ImageGalleryItem images={images} onClick={this.toggleModal}/>
         </ImageGallery>
         {isLoading === true &&  <Loader />}
         {images.length / 12 >= page && <Button onClick={this.onClick}/>}

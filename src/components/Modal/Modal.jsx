@@ -1,14 +1,28 @@
-import React from 'react';
-import css from './Modal.module.css'
+import React, { Component } from 'react';
+import { createPortal } from 'react-dom';
+import css from './Modal.module.css';
 
-const Modal = ({largeImageURL, tags}) => {
-  return (
-    <div className={css.overlay}>
-      <div className={css.modal}>
-        <img src={largeImageURL} alt={tags} />
-      </div>
-    </div>
-  );
-};
+const modalRoot = document.querySelector('#modal-root');
+
+class Modal extends Component {
+   componentDidMount() {
+    window.addEventListener('keydown', e => {
+      if(e.code === 'Escape') {
+       this.props.onClose();
+      }
+    })
+   }
+
+  render() {
+    return createPortal(
+      <div className={css.overlay}>
+        <div className={css.modal}>
+          <img src="" alt="" />
+        </div>
+      </div>,
+      modalRoot
+    );
+  }
+}
 
 export default Modal;
