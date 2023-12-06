@@ -1,9 +1,13 @@
 import React from 'react';
 import css from './ImageGallery.module.css'
+import { nanoid } from 'nanoid';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 
-const ImageGallery = ({children}) => {
+const ImageGallery = ({images}) => {
   return <ul className={css.gallery}>
-    {children}
+     {images.map(image => (
+        <ImageGalleryItem key={image.id+nanoid()} image={image} />
+      ))}
   </ul>;
 };
 

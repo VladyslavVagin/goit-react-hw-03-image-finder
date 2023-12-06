@@ -1,13 +1,11 @@
 import { Component } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import getPicturesApi from './api-request/api-request';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -15,16 +13,7 @@ export class App extends Component {
     isLoading: false,
     page: 1,
     searchData: '',
-    showModal: false,
   };
-
-  toggleModal = () => {
-    if(this.state.showModal) {
-      this.setState({showModal: false});
-    } else {
-      this.setState({showModal: true});
-    }
-  }
 
   onSubmitForm = event => {
     event.preventDefault();
@@ -80,14 +69,11 @@ export class App extends Component {
   }
 
   render() {
-    const { images, page, isLoading, showModal } = this.state;
+    const { images, page, isLoading } = this.state;
     return (
       <div>
-        {showModal && <Modal onClose={this.toggleModal}/>}
         <SearchBar onSubmit={this.onSubmitForm} />
-        <ImageGallery>
-          <ImageGalleryItem images={images} onClick={this.toggleModal}/>
-        </ImageGallery>
+        <ImageGallery images={images}/>
         {isLoading === true &&  <Loader />}
         {images.length / 12 >= page && <Button onClick={this.onClick}/>}
         <ToastContainer autoClose={3000}/>

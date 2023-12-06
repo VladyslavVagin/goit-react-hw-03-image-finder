@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { Component } from 'react';
 import css from './ImageGalleryItem.module.css'
-import { nanoid } from 'nanoid';
+import Modal from 'components/Modal/Modal';
 
-const ImageGalleryItem = ({images, onClick}) => {
-  return (
-    <>
-      {images.map((image) => {
-        const { webformatURL, tags, id, largeImageURL} = image;
-          return ( 
-            <li key={id+nanoid()} className={css.item} onClick={onClick}>
-            <img src={webformatURL} alt={tags} loading='lazy' className={css.image}/>
-          </li>)
-      })}
-    </>
-  )
-}
+export default class ImageGalleryItem extends Component {
+  state = {
+    showModal: false,
+  }
 
-export default ImageGalleryItem;
+  toggleModal = () => {
+    if(this.state.showModal) {
+      this.setState({showModal: false});
+    } else {
+      this.setState({showModal: true});
+    }
+  }
+
+
+
+   render() {
+    const {showModal} = this.state;
+    const { image } = this.props;
+    const { webformatURL, tags, largeImageURL} = image;
+    return ( 
+      <>
+        {showModal && <Modal onClose={this.toggleModal} picture={largeImageURL} tags={tags} />}
+              <li  className={css.item} >
+              <img src={webformatURL} alt={tags} loading='lazy' className={css.image}/>
+            </li>
+            </>
+            )
+   }
+   }
