@@ -5,9 +5,7 @@ const SearchBar = ({onSubmit}) => {
   return (
     <header className={css.searchbar}>
       <form className={css.form} onSubmit={onSubmit}>
-        <button type="submit" className={css.button}>
-          <span className={css.label}>Search</span>
-        </button>
+        <button type="submit" className={css.button}></button>
 
         <input
           className={css.input}
