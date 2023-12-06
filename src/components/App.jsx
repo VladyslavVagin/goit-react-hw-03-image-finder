@@ -20,14 +20,13 @@ export class App extends Component {
     event.preventDefault();
     const searchData = event.target.elements[1].value;
     this.setState({ searchData, page: 1, images: [], isLoading: true });
-    this.addImagesToGallery(searchData, 1);
+    this.addImagesToGallery(searchData, 1, []);
     event.target.elements[1].value = '';
   };
 
   onClick = () => this.setState(({ page }) => ({ page: page + 1 }));
 
-  addImagesToGallery = async (searchData, page) => {
-    let arrayInitial = [];
+  addImagesToGallery = async (searchData, page,  arrayInitial = []) => {
      try {
     const response =  await getPicturesApi(searchData, page);
     if (response.data.total === 0) {
@@ -43,8 +42,7 @@ export class App extends Component {
         position: toast.POSITION.TOP_RIGHT
       });
     }
-      arrayInitial = [...this.state.images, ...response.data.hits];
-      this.setState({ images: arrayInitial });
+      this.setState({ images: [...arrayInitial, ...response.data.hits] });
     } catch {
       toast.error('Server not answer, Sorry!', {
         position: toast.POSITION.TOP_RIGHT
@@ -60,7 +58,7 @@ export class App extends Component {
       prevState.page !== this.state.page &&
       prevState.searchData === this.state.searchData ) {
       this.setState({isLoading: true})
-      this.addImagesToGallery(searchData, page);
+      this.addImagesToGallery(searchData, page, prevState.images);
     }
   }
 
