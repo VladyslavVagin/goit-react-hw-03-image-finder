@@ -7,13 +7,7 @@ export default class ImageGalleryItem extends Component {
     showModal: false,
   };
 
-  toggleModal = () => {
-    if (this.state.showModal) {
-      this.setState({ showModal: false });
-    } else {
-      this.setState({ showModal: true });
-    }
-  };
+  toggleModal = () => this.setState(({showModal}) => ({showModal: !showModal}));
 
   render() {
     const { showModal } = this.state;
@@ -32,7 +26,6 @@ export default class ImageGalleryItem extends Component {
           <img
             src={webformatURL}
             alt={tags}
-            loading="lazy"
             className={css.image}
           />
         </li>

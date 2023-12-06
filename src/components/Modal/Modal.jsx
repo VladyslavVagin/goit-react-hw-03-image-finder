@@ -22,6 +22,10 @@ class Modal extends Component {
     }
   };
 
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
+
   render() {
     return createPortal(
       <div className={css.overlay} onClick={this.handleBackdropClick}>
