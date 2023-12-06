@@ -1,5 +1,6 @@
 import React from 'react';
 import css from './ImageGalleryItem.module.css'
+import { nanoid } from 'nanoid';
 
 const ImageGalleryItem = ({images}) => {
   return (
@@ -7,7 +8,7 @@ const ImageGalleryItem = ({images}) => {
       {images.map((image) => {
         const { webformatURL, tags, id} = image;
           return ( 
-            <li key={id} className={css.item}>
+            <li key={id+nanoid()} className={css.item}>
             <img src={webformatURL} alt={tags} loading='lazy' className={css.image}/>
           </li>)
       })}
