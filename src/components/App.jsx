@@ -19,7 +19,11 @@ export class App extends Component {
   };
 
   toggleModal = () => {
-    this.setState(({showModal}) => ({showModal: !showModal}))
+    if(this.state.showModal) {
+      this.setState({showModal: false});
+    } else {
+      this.setState({showModal: true});
+    }
   }
 
   onSubmitForm = event => {
