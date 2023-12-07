@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import css from './ImageGalleryItem.module.css';
 import Modal from 'components/Modal/Modal';
+import PropTypes from 'prop-types';
 
 export default class ImageGalleryItem extends Component {
   state = {
@@ -22,7 +23,7 @@ export default class ImageGalleryItem extends Component {
             tags={tags}
           />
         )}
-        <li className={css.item} onClick={this.toggleModal}>
+        <li onClick={this.toggleModal}>
           <img
             src={webformatURL}
             alt={tags}
@@ -32,4 +33,8 @@ export default class ImageGalleryItem extends Component {
       </>
     );
   }
+}
+
+ImageGalleryItem.propTypes = {
+  image: PropTypes.object.isRequired,
 }

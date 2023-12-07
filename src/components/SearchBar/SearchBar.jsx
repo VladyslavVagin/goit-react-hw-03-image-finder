@@ -4,6 +4,7 @@ import css from './SearchBar.module.css'
 const SearchBar = ({onSubmit}) => {
   return (
     <header className={css.searchbar}>
+      <p className={css.title}>PIXABAY.COM</p>
       <form className={css.form} onSubmit={onSubmit}>
         <button type="submit" className={css.button}></button>
 

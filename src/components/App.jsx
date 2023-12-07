@@ -71,7 +71,7 @@ export class App extends Component {
   render() {
     const { images, page, isLoading } = this.state;
     return (
-      <div>
+      <div className='wrapper-gallery'>
         <SearchBar onSubmit={this.onSubmitForm} />
         <ImageGallery images={images}/>
         {isLoading === true &&  <Loader />}

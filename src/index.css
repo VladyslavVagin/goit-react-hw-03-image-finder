@@ -39,4 +39,24 @@ img {
   display: block;
   max-width: 100%;
 }
-
+.wrapper-gallery {
+  animation: pulse 3000ms infinite;
+  padding-bottom: 20px;
+}
+@keyframes pulse {
+  0% {
+    background-color:  #D9AFD9;
+  }
+  25% {
+    background-color:  #FA8BFF;
+  }
+  50% {
+    background-color:  #FF5ACD;
+  }
+  75% {
+    background-color: #9b7088;
+  }
+  100% {
+    background-color: #FA8BFF;
+  }
+}  
