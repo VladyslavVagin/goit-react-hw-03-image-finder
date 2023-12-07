@@ -10,7 +10,7 @@ async function getPicturesApi(searchData, page) {
       orientation: 'horizontal',
       page,
       per_page: 12,
-      safesearch: true,
+      safesearch: false,
     },
   });
   return response;
